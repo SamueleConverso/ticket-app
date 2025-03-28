@@ -254,5 +254,19 @@ namespace PROGETTO_U5_S3_L5.Services {
                 return false;
             }
         }
+
+        public async Task<List<Biglietto>> GetAllBigliettiAreaPrivataAsync(string userId) {
+            var biglietti = new List<Biglietto>();
+
+            try {
+                biglietti = await _context.Biglietti.Where(b => b.UserId == userId).Include(b => b.Evento).ThenInclude(e => e.Artista).Include(b => b.ApplicationUser).ToListAsync();
+                return biglietti;
+            } catch (Exception ex) {
+                biglietti = new List<Biglietto>();
+                Console.WriteLine(ex.Message);
+            }
+
+            return biglietti;
+        }
     }
 }

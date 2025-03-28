@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PROGETTO_U5_S3_L5.DTOs.ApplicationUser;
 using PROGETTO_U5_S3_L5.DTOs.Artista;
@@ -10,6 +12,7 @@ using PROGETTO_U5_S3_L5.Services;
 namespace PROGETTO_U5_S3_L5.Controllers {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TicketController : ControllerBase {
         private readonly TicketService _ticketService;
 
@@ -19,6 +22,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
         //++++++METODI ARTISTA++++++
 
+        [Authorize(Roles = "Amministratore")]
         [HttpPost("artista")]
         public async Task<IActionResult> AddArtista([FromBody] CreateArtistaRequestDto createArtistaRequestDto) {
             var newArtista = new Artista {
@@ -40,6 +44,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             });
         }
 
+        [Authorize(Roles = "Amministratore")]
         [HttpGet("artista")]
         public async Task<IActionResult> GetAllArtisti() {
             var artistiList = await _ticketService.GetAllArtistiAsync();
@@ -73,6 +78,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             });
         }
 
+        [Authorize(Roles = "Amministratore")]
         [HttpGet("artista/{id:guid}")]
         public async Task<IActionResult> GetArtistaById(Guid id) {
             var artistaToFind = await _ticketService.GetArtistaByIdAsync(id);
@@ -102,6 +108,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             });
         }
 
+        [Authorize(Roles = "Amministratore")]
         [HttpPut("artista/{id:guid}")]
         public async Task<IActionResult> UpdateArtista(Guid id, [FromBody] UpdateArtistaRequestDto updateArtistaRequestDto) {
             var result = await _ticketService.UpdateArtistaAsync(id, updateArtistaRequestDto);
@@ -117,6 +124,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             });
         }
 
+        [Authorize(Roles = "Amministratore")]
         [HttpDelete("artista/{id:guid}")]
         public async Task<IActionResult> DeleteArtista(Guid id) {
             var result = await _ticketService.DeleteArtistaAsync(id);
@@ -134,6 +142,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
         //++++++METODI EVENTO++++++
 
+        [Authorize(Roles = "Amministratore")]
         [HttpPost("evento")]
         public async Task<IActionResult> AddEvento([FromBody] CreateEventoRequestDto createEventoRequestDto) {
             var newEvento = new Evento {
@@ -156,6 +165,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             });
         }
 
+        [AllowAnonymous]
         [HttpGet("evento")]
         public async Task<IActionResult> GetAllEventi() {
             var eventiList = await _ticketService.GetAllEventiAsync();
@@ -189,6 +199,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             });
         }
 
+        [AllowAnonymous]
         [HttpGet("evento/{id:guid}")]
         public async Task<IActionResult> GetEventoById(Guid id) {
             var eventoToFind = await _ticketService.GetEventoByIdAsync(id);
@@ -218,6 +229,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             });
         }
 
+        [Authorize(Roles = "Amministratore")]
         [HttpPut("evento/{id:guid}")]
         public async Task<IActionResult> UpdateEvento(Guid id, [FromBody] UpdateEventoRequestDto updateEventoRequestDto) {
             var result = await _ticketService.UpdateEventoAsync(id, updateEventoRequestDto);
@@ -233,6 +245,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             });
         }
 
+        [Authorize(Roles = "Amministratore")]
         [HttpDelete("evento/{id:guid}")]
         public async Task<IActionResult> DeleteEvento(Guid id) {
             var result = await _ticketService.DeleteEventoAsync(id);
@@ -252,9 +265,11 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
         [HttpPost("biglietto")]
         public async Task<IActionResult> AddBiglietto([FromBody] CreateBigliettoRequestDto createBigliettoRequestDto) {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
             var newBiglietto = new Biglietto {
                 EventoId = createBigliettoRequestDto.EventoId,
-                UserId = createBigliettoRequestDto.UserId
+                UserId = userId
             };
 
             var result = await _ticketService.AddBigliettoAsync(newBiglietto);
@@ -270,6 +285,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             });
         }
 
+        [Authorize(Roles = "Amministratore")]
         [HttpGet("biglietto")]
         public async Task<IActionResult> GetAllBiglietti() {
             var bigliettiList = await _ticketService.GetAllBigliettiAsync();
@@ -312,6 +328,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             });
         }
 
+        [Authorize(Roles = "Amministratore")]
         [HttpGet("biglietto/{id:guid}")]
         public async Task<IActionResult> GetBigliettoById(Guid id) {
             var bigliettoToFind = await _ticketService.GetBigliettoByIdAsync(id);
@@ -350,6 +367,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             });
         }
 
+        [Authorize(Roles = "Amministratore")]
         [HttpPut("biglietto/{id:guid}")]
         public async Task<IActionResult> UpdateBiglietto(Guid id, [FromBody] UpdateBigliettoRequestDto updateBigliettoRequestDto) {
             var result = await _ticketService.UpdateBigliettoAsync(id, updateBigliettoRequestDto);
@@ -365,6 +383,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             });
         }
 
+        [Authorize(Roles = "Amministratore")]
         [HttpDelete("biglietto/{id:guid}")]
         public async Task<IActionResult> DeleteBiglietto(Guid id) {
             var result = await _ticketService.DeleteBigliettoAsync(id);
@@ -377,6 +396,52 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
             return Ok(new {
                 message = "Biglietto cancellato con successo"
+            });
+        }
+
+        //++++++METODO BIGLIETTO AREA PRIVATA UTENTE++++++
+
+        [HttpGet("biglietto/area-privata")]
+        public async Task<IActionResult> GetAllBigliettiAreaPrivata() {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var bigliettiList = await _ticketService.GetAllBigliettiAreaPrivataAsync(userId);
+
+            if (bigliettiList == null) {
+                return BadRequest(new {
+                    message = "Errore nel recupero dei biglietti"
+                });
+            }
+
+            if (!bigliettiList.Any()) {
+                return NoContent();
+            }
+
+            var bigliettiResponse = bigliettiList.Select(b => new BigliettoDto() {
+                BigliettoId = b.BigliettoId,
+                DataAcquisto = b.DataAcquisto,
+                EventoDto2 = new EventoDto2 {
+                    EventoId = b.Evento.EventoId,
+                    Titolo = b.Evento.Titolo,
+                    Data = b.Evento.Data,
+                    Luogo = b.Evento.Luogo,
+                    ArtistaDto2 = new ArtistaDto2 {
+                        ArtistaId = b.Evento.Artista.ArtistaId,
+                        Nome = b.Evento.Artista.Nome,
+                        Genere = b.Evento.Artista.Genere,
+                        Biografia = b.Evento.Artista.Biografia
+                    }
+                },
+                ApplicationUserDto = new ApplicationUserDto {
+                    Id = b.ApplicationUser.Id,
+                    FirstName = b.ApplicationUser.FirstName,
+                    LastName = b.ApplicationUser.LastName
+                }
+            });
+
+            return Ok(new {
+                message = $"Numero biglietti trovati: {bigliettiResponse.Count()}",
+                biglietti = bigliettiResponse
             });
         }
     }

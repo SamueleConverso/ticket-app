@@ -28,6 +28,12 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto) {
+            if (User.Identity.IsAuthenticated) {
+                return BadRequest(new {
+                    message = "Utente già autenticato"
+                });
+            }
+
             var user = new ApplicationUser {
                 FirstName = registerRequestDto.FirstName,
                 LastName = registerRequestDto.LastName,
@@ -52,6 +58,12 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestDto loginRequestDto) {
+            if (User.Identity.IsAuthenticated) {
+                return BadRequest(new {
+                    message = "Utente già autenticato"
+                });
+            }
+
             var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
 
             if (user == null) {
@@ -68,6 +80,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
             claims.Add(new Claim(ClaimTypes.Email, user.Email));
             claims.Add(new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"));
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
 
             foreach (var role in roles) {
                 claims.Add(new Claim(ClaimTypes.Role, role));
