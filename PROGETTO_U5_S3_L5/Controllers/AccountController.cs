@@ -31,14 +31,6 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto) {
-            if (User.Identity.IsAuthenticated) {
-                var logErrorMessage = "Utente già autenticato";
-                _loggerService.LogError(logErrorMessage);
-                return BadRequest(new {
-                    message = logErrorMessage
-                });
-            }
-
             var user = new ApplicationUser {
                 FirstName = registerRequestDto.FirstName,
                 LastName = registerRequestDto.LastName,
@@ -67,14 +59,6 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestDto loginRequestDto) {
-            if (User.Identity.IsAuthenticated) {
-                var logErrorMessage = "Utente già autenticato";
-                _loggerService.LogError(logErrorMessage);
-                return BadRequest(new {
-                    message = logErrorMessage
-                });
-            }
-
             var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
 
             if (user == null) {
