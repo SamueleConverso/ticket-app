@@ -1,0 +1,6 @@
+@PROGETTO_U5_S3_L5_HostAddress = http://localhost:5117
+
+GET {{PROGETTO_U5_S3_L5_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
