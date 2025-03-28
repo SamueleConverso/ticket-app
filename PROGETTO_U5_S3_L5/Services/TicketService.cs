@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PROGETTO_U5_S3_L5.Data;
 using PROGETTO_U5_S3_L5.DTOs.Artista;
+using PROGETTO_U5_S3_L5.DTOs.Biglietto;
 using PROGETTO_U5_S3_L5.DTOs.Evento;
 using PROGETTO_U5_S3_L5.Models;
 
@@ -184,6 +185,69 @@ namespace PROGETTO_U5_S3_L5.Services {
         public async Task<bool> AddBigliettoAsync(Biglietto biglietto) {
             try {
                 _context.Biglietti.Add(biglietto);
+                return await SaveAsync();
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        public async Task<List<Biglietto>> GetAllBigliettiAsync() {
+            var biglietti = new List<Biglietto>();
+
+            try {
+                biglietti = await _context.Biglietti.Include(b => b.Evento).ThenInclude(e => e.Artista).Include(b => b.ApplicationUser).ToListAsync();
+                return biglietti;
+            } catch (Exception ex) {
+                biglietti = new List<Biglietto>();
+                Console.WriteLine(ex.Message);
+            }
+
+            return biglietti;
+        }
+
+        public async Task<Biglietto> GetBigliettoByIdAsync(Guid id) {
+            Biglietto biglietto = null;
+
+            try {
+                biglietto = await _context.Biglietti.Include(b => b.Evento).ThenInclude(e => e.Artista).Include(b => b.ApplicationUser).FirstOrDefaultAsync(b => b.BigliettoId == id);
+                return biglietto;
+            } catch (Exception ex) {
+                biglietto = null;
+                Console.WriteLine(ex.Message);
+            }
+
+            return biglietto;
+        }
+
+        public async Task<bool> UpdateBigliettoAsync(Guid id, UpdateBigliettoRequestDto updateBigliettoRequestDto) {
+            try {
+                var bigliettoTrovato = await GetBigliettoByIdAsync(id);
+
+                if (bigliettoTrovato == null) {
+                    return false;
+                }
+
+                bigliettoTrovato.UserId = updateBigliettoRequestDto.UserId;
+                bigliettoTrovato.EventoId = updateBigliettoRequestDto.EventoId;
+
+                return await SaveAsync();
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteBigliettoAsync(Guid id) {
+            try {
+                var biglietto = await GetBigliettoByIdAsync(id);
+
+                if (biglietto == null) {
+                    return false;
+                }
+
+                _context.Biglietti.Remove(biglietto);
+
                 return await SaveAsync();
             } catch (Exception ex) {
                 Console.WriteLine(ex.Message);

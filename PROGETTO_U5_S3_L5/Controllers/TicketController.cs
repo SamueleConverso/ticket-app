@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PROGETTO_U5_S3_L5.DTOs.ApplicationUser;
 using PROGETTO_U5_S3_L5.DTOs.Artista;
 using PROGETTO_U5_S3_L5.DTOs.Biglietto;
 using PROGETTO_U5_S3_L5.DTOs.Evento;
@@ -266,6 +267,116 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
             return Ok(new CreateBigliettoResponseDto {
                 Message = "Biglietto aggiunto con successo"
+            });
+        }
+
+        [HttpGet("biglietto")]
+        public async Task<IActionResult> GetAllBiglietti() {
+            var bigliettiList = await _ticketService.GetAllBigliettiAsync();
+
+            if (bigliettiList == null) {
+                return BadRequest(new {
+                    message = "Errore nel recupero dei biglietti"
+                });
+            }
+
+            if (!bigliettiList.Any()) {
+                return NoContent();
+            }
+
+            var bigliettiResponse = bigliettiList.Select(b => new BigliettoDto() {
+                BigliettoId = b.BigliettoId,
+                DataAcquisto = b.DataAcquisto,
+                EventoDto2 = new EventoDto2 {
+                    EventoId = b.Evento.EventoId,
+                    Titolo = b.Evento.Titolo,
+                    Data = b.Evento.Data,
+                    Luogo = b.Evento.Luogo,
+                    ArtistaDto2 = new ArtistaDto2 {
+                        ArtistaId = b.Evento.Artista.ArtistaId,
+                        Nome = b.Evento.Artista.Nome,
+                        Genere = b.Evento.Artista.Genere,
+                        Biografia = b.Evento.Artista.Biografia
+                    }
+                },
+                ApplicationUserDto = new ApplicationUserDto {
+                    Id = b.ApplicationUser.Id,
+                    FirstName = b.ApplicationUser.FirstName,
+                    LastName = b.ApplicationUser.LastName
+                }
+            });
+
+            return Ok(new {
+                message = $"Numero biglietti trovati: {bigliettiResponse.Count()}",
+                eventi = bigliettiResponse
+            });
+        }
+
+        [HttpGet("biglietto/{id:guid}")]
+        public async Task<IActionResult> GetBigliettoById(Guid id) {
+            var bigliettoToFind = await _ticketService.GetBigliettoByIdAsync(id);
+
+            if (bigliettoToFind == null) {
+                return BadRequest(new {
+                    message = "Errore nel recupero del biglietto"
+                });
+            }
+
+            var bigliettoResponse = new BigliettoDto {
+                BigliettoId = bigliettoToFind.BigliettoId,
+                DataAcquisto = bigliettoToFind.DataAcquisto,
+                EventoDto2 = new EventoDto2 {
+                    EventoId = bigliettoToFind.Evento.EventoId,
+                    Titolo = bigliettoToFind.Evento.Titolo,
+                    Data = bigliettoToFind.Evento.Data,
+                    Luogo = bigliettoToFind.Evento.Luogo,
+                    ArtistaDto2 = new ArtistaDto2 {
+                        ArtistaId = bigliettoToFind.Evento.Artista.ArtistaId,
+                        Nome = bigliettoToFind.Evento.Artista.Nome,
+                        Genere = bigliettoToFind.Evento.Artista.Genere,
+                        Biografia = bigliettoToFind.Evento.Artista.Biografia
+                    }
+                },
+                ApplicationUserDto = new ApplicationUserDto {
+                    Id = bigliettoToFind.ApplicationUser.Id,
+                    FirstName = bigliettoToFind.ApplicationUser.FirstName,
+                    LastName = bigliettoToFind.ApplicationUser.LastName
+                }
+            };
+
+            return Ok(new {
+                message = "Biglietto trovato",
+                evento = bigliettoResponse
+            });
+        }
+
+        [HttpPut("biglietto/{id:guid}")]
+        public async Task<IActionResult> UpdateBiglietto(Guid id, [FromBody] UpdateBigliettoRequestDto updateBigliettoRequestDto) {
+            var result = await _ticketService.UpdateBigliettoAsync(id, updateBigliettoRequestDto);
+
+            if (!result) {
+                return BadRequest(new UpdateBigliettoResponseDto {
+                    Message = "Errore nella modifica"
+                });
+            }
+
+            return Ok(new UpdateBigliettoResponseDto {
+                Message = "Biglietto aggiornato con successo"
+            });
+        }
+
+        [HttpDelete("biglietto/{id:guid}")]
+        public async Task<IActionResult> DeleteBiglietto(Guid id) {
+            var result = await _ticketService.DeleteBigliettoAsync(id);
+
+            if (!result) {
+                return BadRequest(new {
+                    message = "Errore nella cancellazione del biglietto"
+                });
+            }
+
+            return Ok(new {
+                message = "Biglietto cancellato con successo"
             });
         }
     }

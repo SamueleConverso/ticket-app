@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using PROGETTO_U5_S3_L5.DTOs.Evento;
+using PROGETTO_U5_S3_L5.DTOs.ApplicationUser;
 
 namespace PROGETTO_U5_S3_L5.DTOs.Biglietto {
     public class BigliettoDto {
@@ -18,7 +19,7 @@ namespace PROGETTO_U5_S3_L5.DTOs.Biglietto {
             get; set;
         }
 
-        public ApplicationUser ApplicationUser {
+        public ApplicationUserDto ApplicationUserDto {
             get; set;
         }
     }
