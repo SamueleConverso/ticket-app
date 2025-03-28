@@ -308,7 +308,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
             return Ok(new {
                 message = $"Numero biglietti trovati: {bigliettiResponse.Count()}",
-                eventi = bigliettiResponse
+                biglietti = bigliettiResponse
             });
         }
 
@@ -346,7 +346,7 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
             return Ok(new {
                 message = "Biglietto trovato",
-                evento = bigliettoResponse
+                biglietto = bigliettoResponse
             });
         }
 
