@@ -4,13 +4,16 @@ using PROGETTO_U5_S3_L5.DTOs.Artista;
 using PROGETTO_U5_S3_L5.DTOs.Biglietto;
 using PROGETTO_U5_S3_L5.DTOs.Evento;
 using PROGETTO_U5_S3_L5.Models;
+using PROGETTO_U5_S3_L5.Services;
 
 namespace PROGETTO_U5_S3_L5.Services {
     public class TicketService {
         private ApplicationDbContext _context;
+        private readonly LoggerService _loggerService;
 
-        public TicketService(ApplicationDbContext context) {
+        public TicketService(ApplicationDbContext context, LoggerService loggerService) {
             _context = context;
+            _loggerService = loggerService;
         }
 
         private async Task<bool> SaveAsync() {
@@ -23,7 +26,8 @@ namespace PROGETTO_U5_S3_L5.Services {
                     return false;
                 }
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
+                _loggerService.LogError("Errore durante il salvataggio: " + ex);
                 return false;
             }
         }
@@ -35,7 +39,8 @@ namespace PROGETTO_U5_S3_L5.Services {
                 _context.Artisti.Add(artista);
                 return await SaveAsync();
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
+                _loggerService.LogError("Errore durante l'aggiunta dell'artista: " + ex);
                 return false;
             }
         }

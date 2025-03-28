@@ -49,6 +49,9 @@ builder.Services.AddAuthentication(options => {
       });
 
 builder.Services.AddScoped<TicketService>();
+builder.Services.AddScoped<LoggerService>();
+
+LoggerService.ConfigureLogger();
 
 var app = builder.Build();
 
@@ -59,6 +62,8 @@ if (app.Environment.IsDevelopment()) {
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

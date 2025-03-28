@@ -15,9 +15,11 @@ namespace PROGETTO_U5_S3_L5.Controllers {
     [Authorize]
     public class TicketController : ControllerBase {
         private readonly TicketService _ticketService;
+        private readonly LoggerService _loggerService;
 
-        public TicketController(TicketService ticketService) {
+        public TicketController(TicketService ticketService, LoggerService loggerService) {
             _ticketService = ticketService;
+            _loggerService = loggerService;
         }
 
         //++++++METODI ARTISTA++++++
@@ -34,13 +36,17 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var result = await _ticketService.AddArtistaAsync(newArtista);
 
             if (!result) {
+                var logErrorMessage = "Errore nell'aggiunta dell'artista";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new CreateArtistaResponseDto {
-                    Message = "Errore nell'aggiunta dell'artista"
+                    Message = logErrorMessage
                 });
             }
 
+            var logInfoMessage = "Artista aggiunto con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new CreateArtistaResponseDto {
-                Message = "Artista aggiunto con successo"
+                Message = logInfoMessage
             });
         }
 
