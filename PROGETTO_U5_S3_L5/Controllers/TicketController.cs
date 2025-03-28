@@ -56,8 +56,10 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var artistiList = await _ticketService.GetAllArtistiAsync();
 
             if (artistiList == null) {
+                var logErrorMessage = "Errore nel recupero degli artisti";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Errore nel recupero degli artisti"
+                    message = logErrorMessage
                 });
             }
 
@@ -78,6 +80,8 @@ namespace PROGETTO_U5_S3_L5.Controllers {
                 }).ToList() : null
             });
 
+            var logInfoMessage = "Artisti trovati con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new {
                 message = $"Numero artisti trovati: {artistiResponse.Count()}",
                 artisti = artistiResponse
@@ -90,8 +94,10 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var artistaToFind = await _ticketService.GetArtistaByIdAsync(id);
 
             if (artistaToFind == null) {
+                var logErrorMessage = "Errore nel recupero dell'artista";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Errore nel recupero dell'artista"
+                    message = logErrorMessage
                 });
             }
 
@@ -108,8 +114,10 @@ namespace PROGETTO_U5_S3_L5.Controllers {
                 }).ToList() : null
             };
 
+            var logInfoMessage = "Artista trovato con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new {
-                message = "Artista trovato",
+                message = logInfoMessage,
                 artista = artistaResponse
             });
         }
@@ -120,13 +128,17 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var result = await _ticketService.UpdateArtistaAsync(id, updateArtistaRequestDto);
 
             if (!result) {
+                var logErrorMessage = "Errore nella modifica dell'artista";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new UpdateArtistaResponseDto {
-                    Message = "Errore nella modifica"
+                    Message = logErrorMessage
                 });
             }
 
+            var logInfoMessage = "Artista aggiornato con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new UpdateArtistaResponseDto {
-                Message = "Artista aggiornato con successo"
+                Message = logInfoMessage
             });
         }
 
@@ -136,13 +148,17 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var result = await _ticketService.DeleteArtistaAsync(id);
 
             if (!result) {
+                var logErrorMessage = "Errore nella cancellazione dell'artista";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Errore nella cancellazione dell'artista"
+                    message = logErrorMessage
                 });
             }
 
+            var logInfoMessage = "Artista cancellato con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new {
-                message = "Artista cancellato con successo"
+                message = logInfoMessage
             });
         }
 
@@ -161,13 +177,17 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var result = await _ticketService.AddEventoAsync(newEvento);
 
             if (!result) {
+                var logErrorMessage = "Errore nell'aggiunta' dell'evento";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new CreateArtistaResponseDto {
-                    Message = "Errore nell'aggiunta dell'evento"
+                    Message = logErrorMessage
                 });
             }
 
+            var logInfoMessage = "Evento aggiunto con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new CreateArtistaResponseDto {
-                Message = "Evento aggiunto con successo"
+                Message = logInfoMessage
             });
         }
 
@@ -177,8 +197,10 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var eventiList = await _ticketService.GetAllEventiAsync();
 
             if (eventiList == null) {
+                var logErrorMessage = "Errore nel recupero degli eventi";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Errore nel recupero degli eventi"
+                    message = logErrorMessage
                 });
             }
 
@@ -199,6 +221,8 @@ namespace PROGETTO_U5_S3_L5.Controllers {
                 }
             });
 
+            var logInfoMessage = "Eventi trovati con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new {
                 message = $"Numero eventi trovati: {eventiResponse.Count()}",
                 eventi = eventiResponse
@@ -211,8 +235,10 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var eventoToFind = await _ticketService.GetEventoByIdAsync(id);
 
             if (eventoToFind == null) {
+                var logErrorMessage = "Errore nel recupero dell'evento";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Errore nel recupero dell'evento"
+                    message = logErrorMessage
                 });
             }
 
@@ -229,8 +255,10 @@ namespace PROGETTO_U5_S3_L5.Controllers {
                 }
             };
 
+            var logInfoMessage = "Evento trovato con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new {
-                message = "Evento trovato",
+                message = logInfoMessage,
                 evento = eventoResponse
             });
         }
@@ -241,13 +269,17 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var result = await _ticketService.UpdateEventoAsync(id, updateEventoRequestDto);
 
             if (!result) {
+                var logErrorMessage = "Errore nella modifica dell'evento";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new UpdateEventoResponseDto {
-                    Message = "Errore nella modifica"
+                    Message = logErrorMessage
                 });
             }
 
+            var logInfoMessage = "Evento aggiornato con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new UpdateEventoResponseDto {
-                Message = "Evento aggiornato con successo"
+                Message = logInfoMessage
             });
         }
 
@@ -257,13 +289,17 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var result = await _ticketService.DeleteEventoAsync(id);
 
             if (!result) {
+                var logErrorMessage = "Errore nella ancellazione dell'evento";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Errore nella cancellazione dell'evento"
+                    message = logErrorMessage
                 });
             }
 
+            var logInfoMessage = "Evento cancellato con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new {
-                message = "Evento cancellato con successo"
+                message = logInfoMessage
             });
         }
 
@@ -281,13 +317,17 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var result = await _ticketService.AddBigliettoAsync(newBiglietto);
 
             if (!result) {
+                var logErrorMessage = "Errore nell'aggiunta del biglietto";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new CreateBigliettoResponseDto {
-                    Message = "Errore nell'aggiunta del biglietto"
+                    Message = logErrorMessage
                 });
             }
 
+            var logInfoMessage = "Biglietto aggiunto con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new CreateBigliettoResponseDto {
-                Message = "Biglietto aggiunto con successo"
+                Message = logInfoMessage
             });
         }
 
@@ -297,8 +337,10 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var bigliettiList = await _ticketService.GetAllBigliettiAsync();
 
             if (bigliettiList == null) {
+                var logErrorMessage = "Errore nel recupero dei biglietti";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Errore nel recupero dei biglietti"
+                    message = logErrorMessage
                 });
             }
 
@@ -328,6 +370,8 @@ namespace PROGETTO_U5_S3_L5.Controllers {
                 }
             });
 
+            var logInfoMessage = "Biglietti trovati con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new {
                 message = $"Numero biglietti trovati: {bigliettiResponse.Count()}",
                 biglietti = bigliettiResponse
@@ -340,8 +384,10 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var bigliettoToFind = await _ticketService.GetBigliettoByIdAsync(id);
 
             if (bigliettoToFind == null) {
+                var logErrorMessage = "Errore nel recupero del biglietto";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Errore nel recupero del biglietto"
+                    message = logErrorMessage
                 });
             }
 
@@ -367,8 +413,10 @@ namespace PROGETTO_U5_S3_L5.Controllers {
                 }
             };
 
+            var logInfoMessage = "Biglietto trovato con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new {
-                message = "Biglietto trovato",
+                message = logInfoMessage,
                 biglietto = bigliettoResponse
             });
         }
@@ -379,13 +427,17 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var result = await _ticketService.UpdateBigliettoAsync(id, updateBigliettoRequestDto);
 
             if (!result) {
+                var logErrorMessage = "Errore nella modifica del biglietto";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new UpdateBigliettoResponseDto {
-                    Message = "Errore nella modifica"
+                    Message = logErrorMessage
                 });
             }
 
+            var logInfoMessage = "Biglietto aggiornato con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new UpdateBigliettoResponseDto {
-                Message = "Biglietto aggiornato con successo"
+                Message = logInfoMessage
             });
         }
 
@@ -395,13 +447,17 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var result = await _ticketService.DeleteBigliettoAsync(id);
 
             if (!result) {
+                var logErrorMessage = "Errore nella cancellazione del biglietto";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Errore nella cancellazione del biglietto"
+                    message = logErrorMessage
                 });
             }
 
+            var logInfoMessage = "Biglietto cancellato con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new {
-                message = "Biglietto cancellato con successo"
+                message = logInfoMessage
             });
         }
 
@@ -414,8 +470,10 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             var bigliettiList = await _ticketService.GetAllBigliettiAreaPrivataAsync(userId);
 
             if (bigliettiList == null) {
+                var logErrorMessage = "Errore nel recupero dei biglietti";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Errore nel recupero dei biglietti"
+                    message = logErrorMessage
                 });
             }
 
@@ -445,6 +503,8 @@ namespace PROGETTO_U5_S3_L5.Controllers {
                 }
             });
 
+            var logInfoMessage = "Biglietti trovati con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new {
                 message = $"Numero biglietti trovati: {bigliettiResponse.Count()}",
                 biglietti = bigliettiResponse

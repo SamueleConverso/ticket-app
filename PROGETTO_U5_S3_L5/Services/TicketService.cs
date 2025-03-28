@@ -26,8 +26,8 @@ namespace PROGETTO_U5_S3_L5.Services {
                     return false;
                 }
             } catch (Exception ex) {
-                //Console.WriteLine(ex.Message);
-                _loggerService.LogError("Errore durante il salvataggio: " + ex);
+
+                _loggerService.LogError("Errore durante il salvataggio: " + ex.Message);
                 return false;
             }
         }
@@ -39,8 +39,8 @@ namespace PROGETTO_U5_S3_L5.Services {
                 _context.Artisti.Add(artista);
                 return await SaveAsync();
             } catch (Exception ex) {
-                //Console.WriteLine(ex.Message);
-                _loggerService.LogError("Errore durante l'aggiunta dell'artista: " + ex);
+
+                _loggerService.LogError("Errore durante l'aggiunta dell'artista: " + ex.Message);
                 return false;
             }
         }
@@ -53,7 +53,8 @@ namespace PROGETTO_U5_S3_L5.Services {
                 return artisti;
             } catch (Exception ex) {
                 artisti = new List<Artista>();
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante il recupero degli artisti: " + ex.Message);
             }
 
             return artisti;
@@ -67,7 +68,8 @@ namespace PROGETTO_U5_S3_L5.Services {
                 return artista;
             } catch (Exception ex) {
                 artista = null;
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante il recupero dell'artista: " + ex.Message);
             }
 
             return artista;
@@ -87,7 +89,9 @@ namespace PROGETTO_U5_S3_L5.Services {
 
                 return await SaveAsync();
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante la modifica dell'artista: " + ex.Message);
+
                 return false;
             }
         }
@@ -104,7 +108,9 @@ namespace PROGETTO_U5_S3_L5.Services {
 
                 return await SaveAsync();
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante la cancellazione dell'artista: " + ex.Message);
+
                 return false;
             }
         }
@@ -116,7 +122,9 @@ namespace PROGETTO_U5_S3_L5.Services {
                 _context.Eventi.Add(evento);
                 return await SaveAsync();
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante l'aggiunta dell'evento: " + ex.Message);
+
                 return false;
             }
         }
@@ -129,7 +137,8 @@ namespace PROGETTO_U5_S3_L5.Services {
                 return eventi;
             } catch (Exception ex) {
                 eventi = new List<Evento>();
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante il recupero degli eventi: " + ex.Message);
             }
 
             return eventi;
@@ -143,7 +152,8 @@ namespace PROGETTO_U5_S3_L5.Services {
                 return evento;
             } catch (Exception ex) {
                 evento = null;
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante il recupero dell'evento: " + ex.Message);
             }
 
             return evento;
@@ -163,7 +173,9 @@ namespace PROGETTO_U5_S3_L5.Services {
 
                 return await SaveAsync();
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante la modifica dell'evento: " + ex.Message);
+
                 return false;
             }
         }
@@ -180,7 +192,9 @@ namespace PROGETTO_U5_S3_L5.Services {
 
                 return await SaveAsync();
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante la cancellazione dell'evento: " + ex.Message);
+
                 return false;
             }
         }
@@ -192,7 +206,9 @@ namespace PROGETTO_U5_S3_L5.Services {
                 _context.Biglietti.Add(biglietto);
                 return await SaveAsync();
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante l'aggiunta del biglietto: " + ex.Message);
+
                 return false;
             }
         }
@@ -205,7 +221,8 @@ namespace PROGETTO_U5_S3_L5.Services {
                 return biglietti;
             } catch (Exception ex) {
                 biglietti = new List<Biglietto>();
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante il recupero dei biglietti: " + ex.Message);
             }
 
             return biglietti;
@@ -219,7 +236,8 @@ namespace PROGETTO_U5_S3_L5.Services {
                 return biglietto;
             } catch (Exception ex) {
                 biglietto = null;
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante il recupero del biglietto: " + ex.Message);
             }
 
             return biglietto;
@@ -238,7 +256,9 @@ namespace PROGETTO_U5_S3_L5.Services {
 
                 return await SaveAsync();
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante la modifica del biglietto: " + ex.Message);
+
                 return false;
             }
         }
@@ -255,10 +275,14 @@ namespace PROGETTO_U5_S3_L5.Services {
 
                 return await SaveAsync();
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante la cancellazione del biglietto: " + ex.Message);
+
                 return false;
             }
         }
+
+        //++++++METODO BIGLIETTO AREA PRIVATA UTENTE++++++
 
         public async Task<List<Biglietto>> GetAllBigliettiAreaPrivataAsync(string userId) {
             var biglietti = new List<Biglietto>();
@@ -268,7 +292,8 @@ namespace PROGETTO_U5_S3_L5.Services {
                 return biglietti;
             } catch (Exception ex) {
                 biglietti = new List<Biglietto>();
-                Console.WriteLine(ex.Message);
+
+                _loggerService.LogError("Errore durante il recupero dei biglietti: " + ex.Message);
             }
 
             return biglietti;

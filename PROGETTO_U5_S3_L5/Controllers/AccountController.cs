@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PROGETTO_U5_S3_L5.Models;
+using PROGETTO_U5_S3_L5.Services;
 
 namespace PROGETTO_U5_S3_L5.Controllers {
     [Route("api/[controller]")]
@@ -18,19 +19,23 @@ namespace PROGETTO_U5_S3_L5.Controllers {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly LoggerService _loggerService;
 
-        public AccountController(IOptions<Jwt> jwtOptions, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager) {
+        public AccountController(IOptions<Jwt> jwtOptions, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, LoggerService loggerService) {
             _jwtSettings = jwtOptions.Value;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _loggerService = loggerService;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto) {
             if (User.Identity.IsAuthenticated) {
+                var logErrorMessage = "Utente già autenticato";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Utente già autenticato"
+                    message = logErrorMessage
                 });
             }
 
@@ -42,8 +47,10 @@ namespace PROGETTO_U5_S3_L5.Controllers {
             };
             var result = await _userManager.CreateAsync(user, registerRequestDto.Password);
             if (!result.Succeeded) {
+                var logErrorMessage = "Errore nella registrazione dell'utente";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Errore nella registrazione dell'utente"
+                    message = logErrorMessage
                 });
             }
 
@@ -51,24 +58,30 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
             await _userManager.AddToRoleAsync(userForRole, "Utente");
 
+            var logInfoMessage = "Registrazione avvenuta con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new {
-                message = "Registrazione avvenuta con successo"
+                message = logInfoMessage
             });
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestDto loginRequestDto) {
             if (User.Identity.IsAuthenticated) {
+                var logErrorMessage = "Utente già autenticato";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Utente già autenticato"
+                    message = logErrorMessage
                 });
             }
 
             var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
 
             if (user == null) {
+                var logErrorMessage = "Qualcosa è andato storto.";
+                _loggerService.LogError(logErrorMessage);
                 return BadRequest(new {
-                    message = "Qualcosa è andato storto."
+                    message = logErrorMessage
                 });
             }
 
@@ -94,6 +107,8 @@ namespace PROGETTO_U5_S3_L5.Controllers {
 
             string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
+            var logInfoMessage = "Login avvenuto con successo";
+            _loggerService.LogInformation(logInfoMessage);
             return Ok(new TokenResponse() {
                 Token = tokenString,
                 Expires = expiry
